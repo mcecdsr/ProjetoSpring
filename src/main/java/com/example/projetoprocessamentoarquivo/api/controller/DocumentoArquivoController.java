@@ -39,14 +39,14 @@ public class DocumentoArquivoController {
     public ResponseEntity<?> receberArquivoMobile(DocumentoArquivoInput documentoArquivoInput){
         try {
 
+
             MultipartFile arquivo = documentoArquivoInput.getArquivo();
-            arquivo.getOriginalFilename().split("\\.");
-            var arquivoText1 = Path.of("/Users/Public", arquivo.getOriginalFilename());
+            InputStream fis = arquivo.getInputStream();
             String linhaArmazenada = "";
             if(isExtensaoImagem(arquivo.getOriginalFilename())){
                 linhaArmazenada = TEXTO_DEFAULT;
             }else{
-                linhaArmazenada = lerArquivoInput(arquivoText1, linhaArmazenada);
+                linhaArmazenada = lerArquivoInput(arquivo.getInputStream(), linhaArmazenada);
             }
             Map<String, Integer> contagemDocumento = processarArquivoInput(linhaArmazenada);
             DocumentoInput documentoInput = new DocumentoInput();
@@ -66,13 +66,12 @@ public class DocumentoArquivoController {
     public ResponseEntity<?> receberArquivoDesktop(DocumentoArquivoInput documentoArquivoInput){
         try {
             MultipartFile arquivo = documentoArquivoInput.getArquivo();
-            arquivo.getOriginalFilename().split("\\.");
-            var arquivoText1 = Path.of("/Users/Public", arquivo.getOriginalFilename());
+            InputStream fis = arquivo.getInputStream();
             String linhaArmazenada = "";
             if(isExtensaoImagem(arquivo.getOriginalFilename())){
                 linhaArmazenada = TEXTO_DEFAULT;
             }else{
-                linhaArmazenada = lerArquivoInput(arquivoText1, linhaArmazenada);
+                linhaArmazenada = lerArquivoInput(arquivo.getInputStream(), linhaArmazenada);
             }
             Map<String, Integer> contagemDocumento = processarArquivoInput(linhaArmazenada);
             DocumentoInput documentoInput = new DocumentoInput();
@@ -92,13 +91,12 @@ public class DocumentoArquivoController {
     public ResponseEntity<?> receberArquivoWeb(DocumentoArquivoInput documentoArquivoInput){
         try {
             MultipartFile arquivo = documentoArquivoInput.getArquivo();
-            arquivo.getOriginalFilename().split("\\.");
-            var arquivoText1 = Path.of("/Users/Public", arquivo.getOriginalFilename());
+            InputStream fis = arquivo.getInputStream();
             String linhaArmazenada = "";
             if(isExtensaoImagem(arquivo.getOriginalFilename())){
                 linhaArmazenada = TEXTO_DEFAULT;
             }else{
-                linhaArmazenada = lerArquivoInput(arquivoText1, linhaArmazenada);
+                linhaArmazenada = lerArquivoInput(arquivo.getInputStream(), linhaArmazenada);
             }
             Map<String, Integer> contagemDocumento = processarArquivoInput(linhaArmazenada);
             DocumentoInput documentoInput = new DocumentoInput();
@@ -127,8 +125,8 @@ public class DocumentoArquivoController {
         return contagemDocumento;
     }
 
-    private String lerArquivoInput(Path arquivoText1, String linhaArmazenada) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(arquivoText1.toString()));
+    private String lerArquivoInput(InputStream input, String linhaArmazenada) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(input));
         while(br.ready()){
             String linha = br.readLine();
             linhaArmazenada += linha + " ";
